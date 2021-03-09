@@ -5,6 +5,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -16,33 +22,62 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import com.example.controlescolar.Entity.Spriden;
-import com.example.controlescolar.Entity.DTO.SpridemDTO;
+import com.example.controlescolar.Entity.Stvturn;
+import com.example.controlescolar.Entity.DTO.RegistroDto;
 import com.example.controlescolar.Entity.DTO.UploadFileDTO;
 import com.example.controlescolar.Repository.ISpridemRepository;
-import com.example.controlescolar.Repository.IUsuariosRepository;
+import com.example.controlescolar.Repository.IstvTurnRepository;
 
 @Service
 public class UsauriosServiceImpl implements IUsuariosService {
 	
 	
 	
-	
-	@Autowired
-		private IUsuariosRepository iUsaurioRepository;
 	@Autowired
 	private ISpridemRepository iSrpidenRepository;
 	
+	@Autowired
+	private IstvTurnRepository istvTurnRepository;
 	@Override
 	@Transactional
-	public ResponseEntity<Spriden> save(@Valid Spriden spridendto2){
-
-				Spriden idValor=  iSrpidenRepository.saveAndFlush(spridendto2);
-	spridendto2.setSpridenId(idValor.getSpridenId());
-		  
-		return new ResponseEntity<Spriden>(spridendto2,HttpStatus.OK);
+	public ResponseEntity<RegistroDto> save(@Valid RegistroDto spridendto2){
+		
+	 	Calendar fecha = new GregorianCalendar();
+	 	int year = fecha.get(Calendar.YEAR);  
+	 	Random r1 = new Random();
+	 	int numero=r1.nextInt(10000);
+		Spriden newSpriden=new Spriden();
+		 String numeros=String.valueOf(year+""+numero);
+	 		int matriculaEstudiante=Integer.parseInt(numeros);
+	 		List<Spriden> spr=iSrpidenRepository.sarchsMatricula(matriculaEstudiante);
+	 		if(!spr.isEmpty()) {
+	 		 	Random r2 = new Random();
+	 		 	int numero2=r2.nextInt(10000);
+	 			 String numeros2=String.valueOf(year+""+numero2);
+	 	 		int matriculaEstudiante2=Integer.parseInt(numeros2);
+	 			 newSpriden.setSpridenMatricula(matriculaEstudiante2);
+	 		}else {
+	 			newSpriden.setSpridenMatricula(matriculaEstudiante);	 	
+	 		}
+	 		
+			newSpriden.setSpridenAp(spridendto2.getSpridenAp());
+		 	newSpriden.setSpridenApm(spridendto2.getSpridenApm());
+		 	newSpriden.setSpridenNombre(spridendto2.getSpridenNombre());
+		 	newSpriden.setSpridenCurp(spridendto2.getSpridenCurp());
+		 	newSpriden.setSpridenFlag(spridendto2.getSpridenFlag());
+		 	newSpriden.setSridenUser(spridendto2.getSridenUser());
+		 	newSpriden.setUsuarioId(spridendto2.getUsuarioId());
+		 	newSpriden.setSpridenActivityDate(spridendto2.getSpridenActivityDate());	 	
+		 	Set<Stvturn> stvturno=new HashSet<>();
+		 	stvturno.add(istvTurnRepository.findById(spridendto2.getTurno()).get());
+		 	newSpriden.setStvturn(stvturno);
+		 	iSrpidenRepository.saveAndFlush(newSpriden);
+		return new ResponseEntity<RegistroDto>(spridendto2,HttpStatus.OK);
 	}
+	
+	
+	
 	public static final String uploadingDir = System.getProperty("user.dir") + "/alumnosDocumentos";
 	 
 	@Override
