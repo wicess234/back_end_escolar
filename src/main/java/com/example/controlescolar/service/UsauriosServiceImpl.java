@@ -7,10 +7,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -23,7 +21,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.controlescolar.Entity.Spriden;
-import com.example.controlescolar.Entity.Stvturn;
 import com.example.controlescolar.Entity.DTO.RegistroDto;
 import com.example.controlescolar.Entity.DTO.UploadFileDTO;
 import com.example.controlescolar.Repository.ISpridemRepository;
@@ -69,9 +66,7 @@ public class UsauriosServiceImpl implements IUsuariosService {
 		 	newSpriden.setSridenUser(spridendto2.getSridenUser());
 		 	newSpriden.setUsuarioId(spridendto2.getUsuarioId());
 		 	newSpriden.setSpridenActivityDate(spridendto2.getSpridenActivityDate());	 	
-		 	Set<Stvturn> stvturno=new HashSet<>();
-		 	stvturno.add(istvTurnRepository.findById(spridendto2.getTurno()).get());
-		 	newSpriden.setStvturn(stvturno);
+
 		 	iSrpidenRepository.saveAndFlush(newSpriden);
 		return new ResponseEntity<RegistroDto>(spridendto2,HttpStatus.OK);
 	}
