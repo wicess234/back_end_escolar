@@ -40,7 +40,7 @@ public class CustomerExceptionHandler extends ResponseEntityExceptionHandler{
     	int i=0;
         for(ObjectError error : ex.getBindingResult().getAllErrors()) {       
                
-				details.add( error.getDefaultMessage());  
+				details.add(i+ error.getDefaultMessage());  
 				i++;
                	}
        
