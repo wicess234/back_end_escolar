@@ -15,4 +15,8 @@ public interface ISpridemRepository extends JpaRepository<Spriden, Long> {
 
 	@Query(value ="SELECT * FROM spriden  WHERE SPRIDEN_MATRICULA=?1",nativeQuery = true)
 	List<Spriden> sarchsMatricula(int matriculaEstudiante);	
+	
+	
+	@Query(value ="SELECT * FROM spriden  WHERE SPRIDEN_MATRICULA=?1",nativeQuery = true)
+		Spriden searchsMatriculaPer(int matriculaEstudiante);	
 }
